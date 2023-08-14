@@ -9,7 +9,7 @@ Change current directory to mcdonalds-order directory
 npm install
 ```
 
-### Compiles and hot-reloads for development
+### To run the app locally
 ```
 npm run serve
 ```
