@@ -9,7 +9,7 @@
 			:processingOrders="processingOrders"
 			:completedOrders="completedOrders"
 		/>
-		<BotArea :bots="bots" />
+		<BotArea :activeBots="activeBots" :idleBots="idleBots" />
 	</div>
 </template>
 
@@ -38,6 +38,7 @@ export default {
 			};
 			orderCounter.value++;
 			pendingOrders.value.push(order);
+			processOrders();
 		};
 
 		const addVIPOrder = () => {
@@ -48,6 +49,7 @@ export default {
 			orderCounter.value++;
 			const vipIndex = pendingOrders.value.findIndex((order) => order.type === "NORMAL");
 			pendingOrders.value.splice(vipIndex, 0, order);
+			processOrders();
 		};
 
 		const addBot = () => {
@@ -61,14 +63,19 @@ export default {
 
 		const removeBot = () => {
 			const removedBot = bots.value.pop();
-			if (bots.value.length) {
+			if (removedBot) {
 				if (removedBot.status === "PROCESSING") {
 					const processingIndex = processingOrders.value.findIndex(order => order.bot.id === removedBot.id);
 					if (processingIndex !== -1) {
 						const order = processingOrders.value[processingIndex];
 						order.bot = null;
-						pendingOrders.value.push(order);
 						processingOrders.value.splice(processingIndex, 1);
+						const vipIndex = pendingOrders.value.findIndex((order) => order.type === "NORMAL");
+						if (order.type === "VIP") {
+							pendingOrders.value.splice(vipIndex, 0, order);
+						} else {
+							pendingOrders.value.push(order);
+						}
 					}
 				}
 			} else {
@@ -118,16 +125,20 @@ export default {
 			return bots.value.filter(bot => bot.status === "IDLE");
 		});
 
+		const activeBots = computed(() => {
+			return bots.value.filter(bot => bot.status === "PROCESSING");
+		});
+
 		return {
 			pendingOrders,
 			processingOrders,
 			completedOrders,
-			bots,
 			addNormalOrder,
 			addVIPOrder,
 			addBot,
 			removeBot,
 			idleBots,
+			activeBots
 		};
 	},
 };

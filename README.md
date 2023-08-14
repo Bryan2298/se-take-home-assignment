@@ -1,3 +1,19 @@
+# mcdonalds-order (How to run)
+
+## Project setup
+```
+Change current directory to mcdonalds-order directory
+```
+
+```
+npm install
+```
+
+### Compiles and hot-reloads for development
+```
+npm run serve
+```
+
 ## FeedMe Software Engineer Take Home Assignment
 Below is a take home assignment before the interview of the position. You are required to
 1. Understand the situation and use case. You may contact the interviewer for further clarification.
